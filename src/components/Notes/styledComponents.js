@@ -3,6 +3,13 @@ import {styled} from "styled-components"
 const NotesContainer = styled.div
 `
     padding : 10px;
+    background-color : ${(props)=> {
+        if (props.theme === "light"){
+        return "#fff"
+        }
+        else {
+            return "#000"}
+        }};
 `
 
 const NotesHeading = styled.h1
@@ -27,7 +34,6 @@ const NotesInput = styled.input
 `
     width : 100%;
     border :none;
-    outline : none;
     font-size : 16px;
     color : black;
 `

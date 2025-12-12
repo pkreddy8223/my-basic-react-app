@@ -1,11 +1,22 @@
 import {NotesContainer,NotesEmptyContainer, NotesEmptyDesc, NotesEmptyHeading,NotesEmptyImage,NotesHeading,NotesInputContainer,NotesInput,NotesAddButton, NotesListContainer} from "./styledComponents"
-import {useState} from "react"
+import {useRef, useState} from "react"
 import NoteItem from "../NoteItem/index"
 import {v4 as uuidv4} from "uuid"
+import { useContext } from "react"
+import  ThemeContext  from "../../context/ThemeContext"
+
 const Notes = () => {
     const [notes, setNotes] = useState([])
     const [title, setTitle] = useState("")
     const [note, setNote] = useState("")
+
+
+    const titleInputRef = useRef(null)
+    const noteInputRef = useRef(null)
+
+    const {theme, toggleTheme} = useContext(ThemeContext)
+
+
 
     const renderEmptyNotes = () => {
         return (
@@ -28,6 +39,17 @@ const Notes = () => {
     }
 
     const handleAddBtn = () => {
+        if (title === "" && note === ""){
+            console.log("This excuted")
+            titleInputRef.current.focus()
+        }
+        else if (title == ""){
+            titleInputRef.current.focus()
+        }
+        else if (note == ""){
+            noteInputRef.current.focus()
+        }
+        else {
         const newNote = {
             id : uuidv4(),
             title, 
@@ -38,6 +60,8 @@ const Notes = () => {
         })
         setTitle("")
         setNote("")
+        }
+        
     }
     
     const handleTitleChange = (event) => {
@@ -49,12 +73,13 @@ const Notes = () => {
     }
 
     return (
-        <NotesContainer>
+        <NotesContainer theme={theme}>
             <NotesHeading>Notes</NotesHeading>
             <NotesInputContainer>
-                <NotesInput value={title} onChange={handleTitleChange}  type="text" placeholder="Title"/>
-                <NotesInput value={note} onChange={handleNoteChange} type="text" placeholder="Take a Note..."/>
+                <NotesInput required ref={titleInputRef} value={title} onChange={handleTitleChange}  type="text" placeholder="Title"/>
+                <NotesInput required ref={noteInputRef} value={note} onChange={handleNoteChange} type="text" placeholder="Take a Note..."/>
                 <NotesAddButton  onClick={handleAddBtn}>Add</NotesAddButton>
+                <NotesAddButton onClick={toggleTheme}>Toggle Theme</NotesAddButton>
             </NotesInputContainer>
             {notes.length === 0 ? renderEmptyNotes(): renderNotesList()}
         </NotesContainer>
